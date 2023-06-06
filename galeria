@@ -1,0 +1,60 @@
+import React from 'react';
+
+class Gallery extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: [],
+      currentImage: null
+    };
+  }
+
+  componentDidMount() {
+    // Aquí puedes realizar una llamada a una API para obtener las imágenes
+    // y actualizar el estado con las imágenes recibidas
+    // Por ejemplo:
+    fetch('https://api.ejemplo.com/images')
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ images: data });
+      })
+      .catch(error => {
+        console.error('Error fetching images:', error);
+      });
+  }
+
+  handleClick(image) {
+    this.setState({ currentImage: image });
+  }
+
+  render() {
+    const { images, currentImage } = this.state;
+
+    return (
+      <div>
+        <h1>Galería de imágenes</h1>
+        <div className="image-gallery">
+          {images.map(image => (
+            <img
+              key={image.id}
+              src={image.url}
+              alt={image.title}
+              onClick={() => this.handleClick(image)}
+            />
+          ))}
+        </div>
+        {currentImage && (
+          <div className="modal">
+            <img
+              src={currentImage.url}
+              alt={currentImage.title}
+              onClick={() => this.setState({ currentImage: null })}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+export default Gallery;
